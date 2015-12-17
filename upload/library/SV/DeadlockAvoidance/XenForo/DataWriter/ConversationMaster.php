@@ -19,7 +19,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_ConversationMaster extends XFCP_SV
     {
         if (SV_DeadlockAvoidance_Globals::registerPostTransactionClosure(function ()
         {
-            $this->_postSaveAfterTransaction();
+            parent::_postSaveAfterTransaction();
         }))
         {
             return;

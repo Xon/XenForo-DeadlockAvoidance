@@ -16,7 +16,7 @@ class SV_DeadlockAvoidance_XenForo_Model_ThreadWatch extends XFCP_SV_DeadlockAvo
 
     public function setThreadWatchState($userId, $threadId, $state)
     {
-        $key = 'watch-'$userId.'-'.$threadId;
+        $key = 'watch-'.$userId.'-'.$threadId;
         if (!$this->getLock($key, 1))
             return false;
         try

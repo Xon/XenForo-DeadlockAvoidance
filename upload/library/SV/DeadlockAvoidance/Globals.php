@@ -13,12 +13,12 @@ class SV_DeadlockAvoidance_Globals
     protected static $postSaveAfterTransactionList = array();
 
 
-    public static enterTransaction()
+    public static function enterTransaction()
     {
         self::$transactionCount += 1;
     }
 
-    public static registerPostTransactionClosure($closure)
+    public static function registerPostTransactionClosure($closure)
     {
         if (self::$transactionCount > 0)
         {
@@ -28,7 +28,7 @@ class SV_DeadlockAvoidance_Globals
         return false;
     }
     
-    public static exitTransaction()
+    public static function exitTransaction()
     {
         self::$transactionCount -= 1;
         if (self::$transactionCount <= 0)
