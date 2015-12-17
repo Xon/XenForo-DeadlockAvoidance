@@ -29,7 +29,7 @@ class SV_DeadlockAvoidance_Globals
         if (self::$transactionCount <= 0)
         {
             self::$transactionCount = 0;
-            $postSaveAfterTransactionList = self::$postSaveAfterTransactionList;
+            $postSaveAfterTransactionList = array_reverse(self::$postSaveAfterTransactionList);
             self::$postSaveAfterTransactionList = array();
             foreach($postSaveAfterTransactionList as $postSaveAfterTransaction)
             {
