@@ -11,19 +11,16 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Discussion_Thread extends XFCP_SV_
         }
         finally
         {
-            SV_DeadlockAvoidance_Globals::exitTransaction(function ($this)
-            {
-                if (!$this->_importMode)
-                {
-                    $this->_postSaveAfterTransaction();
-                }
-            });
+            SV_DeadlockAvoidance_Globals::exitTransaction();
         }
     }
 
     protected function _postSaveAfterTransaction()
     {
-        if (SV_DeadlockAvoidance_Globals::skipPostSaveAfterTransaction())
+        if (SV_DeadlockAvoidance_Globals::registerPostTransactionClosure(function ()
+        {
+            parent::_postSaveAfterTransaction();
+        }))
         {
             return;
         }

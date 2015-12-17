@@ -18,23 +18,19 @@ class SV_DeadlockAvoidance_Globals
         self::$transactionCount += 1;
     }
 
-    public static skipPostSaveAfterTransaction()
+    public static registerPostTransactionClosure($closure)
     {
-        if (self::$transactionCount == 1 && empty(self::$postSaveAfterTransactionList))
+        if (self::$transactionCount > 0)
         {
-            self::$postSaveAfterTransactionList = null;
+            self::$postSaveAfterTransactionList[] = $closure;        
             return true;
         }
         return false;
     }
-
-    public static exitTransaction($closure)
+    
+    public static exitTransaction()
     {
         self::$transactionCount -= 1;
-        if (self::$postSaveAfterTransactionList !== null)
-        {
-            self::$postSaveAfterTransactionList[] = $closure;
-        }
         if (self::$transactionCount <= 0)
         {
             self::$transactionCount = 0;

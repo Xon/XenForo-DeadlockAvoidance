@@ -2,21 +2,29 @@
 
 class SV_DeadlockAvoidance_XenForo_DataWriter_ConversationMessage extends XFCP_SV_DeadlockAvoidance_XenForo_DataWriter_ConversationMessage
 {
-    protected function _postSave()
+    public function save()
     {
-        $this->_getConversationModel()->sv_deferRebuildUnreadCounters();
-        return parent::_postSave();
+        SV_DeadlockAvoidance_Globals::enterTransaction();
+        try
+        {
+            return parent::save();
+        }
+        finally
+        {
+            SV_DeadlockAvoidance_Globals::exitTransaction();
+        }
     }
 
     protected function _postSaveAfterTransaction()
     {
-        $this->_getConversationModel()->sv_rebuildPendingUnreadCounters();
+        if (SV_DeadlockAvoidance_Globals::registerPostTransactionClosure(function ()
+        {
+            $this->_postSaveAfterTransaction();
+        }))
+        {
+            return;
+        }
 
         parent::_postSaveAfterTransaction();
-    }
-
-    protected function _getConversationModel()
-    {
-        return $this->getModelFromCache('XenForo_Model_Conversation');
     }
 }
