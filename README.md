@@ -4,6 +4,7 @@ Some hacks to avoid XenForo design issues which trigger DB errors
 
 - Watch thread toggle
 - Deadlock on conversations
+- When alerts are updated due to adding/deleting content.
 
 ### Deadlock on conversations
 
