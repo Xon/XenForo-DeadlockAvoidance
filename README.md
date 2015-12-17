@@ -6,6 +6,11 @@ Some hacks to avoid XenForo design issues which trigger DB errors
 - Deadlock on conversations
 - Deadlock on posts
 
+## Requirements
+- php +5.4
+
+## Features
+
 ### Watch thread toggle
 
 Fixes a race condition when creating/removing a watch thread state
