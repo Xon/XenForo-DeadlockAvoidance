@@ -1,6 +1,6 @@
 <?php
 
-class SV_ThreadStarterAlert_XenForo_Model_ThreadWatch extends XFCP_SV_ThreadStarterAlert_XenForo_Model_ThreadWatch
+class SV_DeadlockAvoidance_XenForo_Model_ThreadWatch extends XFCP_SV_DeadlockAvoidance_XenForo_Model_ThreadWatch
 {
     protected function getLock($name, $timeout)
     {
