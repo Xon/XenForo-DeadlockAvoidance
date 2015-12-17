@@ -4,11 +4,6 @@
 // relying on the consumer being loaded correctly by the dynamic class autoloader
 class SV_DeadlockAvoidance_Globals
 {
-    // permits conversation messages & conversation data writers to both use these things at the same time.
-    public static $UsersToUpdateRefs = 0;
-    // list of users who require having their counters updated.
-    public static $UsersToUpdate = null;
-
     protected static $transactionCount = 0;
     protected static $postSaveAfterTransactionList = array();
 
