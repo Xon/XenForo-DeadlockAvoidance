@@ -4,20 +4,20 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_ConversationMessage extends XFCP_S
 {
     public function save()
     {
-        SV_DeadlockAvoidance_Globals::enterTransaction();
+        SV_DeadlockAvoidance_DataWriter::enterTransaction();
         try
         {
             return parent::save();
         }
         finally
         {
-            SV_DeadlockAvoidance_Globals::exitTransaction();
+            SV_DeadlockAvoidance_DataWriter::exitTransaction();
         }
     }
 
     protected function _postSaveAfterTransaction()
     {
-        if (SV_DeadlockAvoidance_Globals::registerPostTransactionClosure(function ()
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
         {
             parent::_postSaveAfterTransaction();
         }))
