@@ -17,6 +17,7 @@
     <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_DiscussionMessage_Post" description="XenForo_DataWriter_DiscussionMessage_Post"/>
     <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_Report" description="XenForo_DataWriter_Report"/>
     <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_ReportComment" description="XenForo_DataWriter_ReportComment"/>
+    <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_Warning" description="XenForo_DataWriter_Warning"/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
