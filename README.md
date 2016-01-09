@@ -1,6 +1,10 @@
 # XenForo-DeadlockAvoidance
 
-Some hacks to avoid XenForo design issues which trigger DB errors
+Some hacks to avoid XenForo design issues which trigger DB errors.
+
+XenForo's Datawriters have a _postSaveAfterTransaction() method. This method is intended to run after a database transaction is finished, but if a DataWriter is called from with-in another DataWriter,  this does not happen. 
+
+This incurs the risk that various notification actions will pull in large queries into a transaction increasing the risk of deadlocks on a busy forum.
 
 - Race condition for watch thread toggle
 - Deadlock on conversations
