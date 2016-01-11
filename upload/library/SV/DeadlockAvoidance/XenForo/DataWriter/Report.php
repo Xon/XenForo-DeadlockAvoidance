@@ -5,13 +5,15 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Report extends XFCP_SV_DeadlockAvo
     public function save()
     {
         SV_DeadlockAvoidance_DataWriter::enterTransaction();
+        $ret = false;
         try
         {
-            return parent::save();
+            $ret = parent::save();
+            return $ret;
         }
         finally
         {
-            SV_DeadlockAvoidance_DataWriter::exitTransaction();
+            SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
         }
     }
 
