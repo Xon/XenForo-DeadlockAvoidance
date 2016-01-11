@@ -12,7 +12,7 @@ This incurs the risk that various notification actions will pull in large querie
 - Deadlock on resolving/rejecting Reports
 
 ## Requirements
-- php +5.4
+- php +5.5
 
 ## Features
 
