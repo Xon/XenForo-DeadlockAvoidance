@@ -33,3 +33,13 @@ Provides a workaround for a XenForo design issue where adding/removing posts can
 ### Deadlock on resolving/rejecting Reports
 Provides a workaround for a XenForo design issue where adding/removing posts can cause deadlocks.
 - Sends report resolve/reject alerts inside the transaction.
+
+##Supported DataWriters
+- XenForo_DataWriter_ConversationMaster
+- XenForo_DataWriter_ConversationMessage
+- XenForo_DataWriter_Discussion_Thread
+- XenForo_DataWriter_DiscussionMessage_Post
+- XenForo_DataWriter_Report
+- XenForo_DataWriter_ReportComment
+- XenForo_DataWriter_Warning
+- XenForo_DataWriter_User
