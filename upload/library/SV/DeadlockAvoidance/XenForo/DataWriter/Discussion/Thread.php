@@ -29,4 +29,16 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Discussion_Thread extends XFCP_SV_
 
         parent::_postSaveAfterTransaction();
     }
+
+    public function _indexForSearch()
+    {
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
+        {
+            parent::_indexForSearch();
+        }))
+        {
+            return;
+        }
+        parent::_indexForSearch();
+    }
 }
