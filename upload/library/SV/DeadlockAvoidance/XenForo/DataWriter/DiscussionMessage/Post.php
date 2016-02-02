@@ -17,6 +17,33 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
         }
     }
 
+    protected function _update()
+    {
+        if ($this->isChanged('message_state') &&
+            ($this->get('message_state') == 'visible' || $this->getExisting('message_state') == 'visible'))
+        {
+            $this->_db->query('SELECT post_id
+                FROM xf_post
+                where thread_id = ?
+            ', $this->get('thread_id'));
+        }
+
+        parent::_update();
+    }
+
+    protected function _delete()
+    {
+        if ($this->get('message_state') == 'visible' || $this->getExisting('message_state') == 'visible')
+        {
+            $this->_db->query('SELECT post_id
+                FROM xf_post
+                where thread_id = ?
+            ', $this->get('thread_id'));
+        }
+
+        parent::_update();
+    }
+
     protected function _postSaveAfterTransaction()
     {
         if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
