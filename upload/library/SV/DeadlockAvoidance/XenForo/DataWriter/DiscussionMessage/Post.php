@@ -43,7 +43,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
             ', $this->get('thread_id'));
         }
 
-        parent::_update();
+        parent::_delete();
     }
 
     protected function _postSaveAfterTransaction()
