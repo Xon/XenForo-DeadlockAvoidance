@@ -22,4 +22,20 @@ class SV_DeadlockAvoidance_XenForo_Model_Post extends XFCP_SV_DeadlockAvoidance_
         }
         return $ret;
     }
+
+    public function mergePosts(array $posts, array $threads, $targetPostId, $newMessage, $options = array())
+    {
+        // hoist bits out of the _moveOrCopyPosts Transaction
+        SV_DeadlockAvoidance_DataWriter::enterTransaction();
+        $ret = false;
+        try
+        {
+            $ret = parent::mergePosts($posts, $threads, $targetPostId, $newMessage, $options);
+        }
+        finally
+        {
+            SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
+        }
+        return $ret;
+    }
 }
