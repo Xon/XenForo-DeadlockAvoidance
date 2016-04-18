@@ -25,7 +25,7 @@ class SV_DeadlockAvoidance_XenForo_Model_Post extends XFCP_SV_DeadlockAvoidance_
 
     public function mergePosts(array $posts, array $threads, $targetPostId, $newMessage, $options = array())
     {
-        // hoist bits out of the _moveOrCopyPosts Transaction
+        // hoist bits out of the mergePosts Transaction
         SV_DeadlockAvoidance_DataWriter::enterTransaction();
         $ret = false;
         try
