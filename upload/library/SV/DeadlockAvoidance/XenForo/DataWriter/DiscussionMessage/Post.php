@@ -24,9 +24,9 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
         {
             $this->_db->query('SELECT post_id
                 FROM xf_post
-                WHERE thread_id = ?
+                WHERE thread_id = ? and position >= ?
                 FOR UPDATE
-            ', $this->get('thread_id'));
+            ', array($this->get('thread_id'), $this->getExisting('position')));
         }
 
         parent::_update();
@@ -38,9 +38,9 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
         {
             $this->_db->query('SELECT post_id
                 FROM xf_post
-                WHERE thread_id = ?
+                WHERE thread_id = ? and position >= ?
                 FOR UPDATE
-            ', $this->get('thread_id'));
+            ', array($this->get('thread_id'), $this->getExisting('position')));
         }
 
         parent::_delete();
