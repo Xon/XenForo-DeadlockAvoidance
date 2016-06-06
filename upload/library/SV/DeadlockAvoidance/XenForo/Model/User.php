@@ -18,7 +18,7 @@ class SV_DeadlockAvoidance_XenForo_Model_User extends XFCP_SV_DeadlockAvoidance_
     {
         if ($user === null)
         {
-            $user = XenForo_Visitor::getInstance();
+            $user = XenForo_Visitor::getInstance()->toArray();
         }
         $key = 'follow-'.$user['user_id'];
         if (!$this->getLock($key, 1))
