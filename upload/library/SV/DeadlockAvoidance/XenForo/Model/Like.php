@@ -12,12 +12,12 @@ class SV_DeadlockAvoidance_XenForo_Model_Like extends XFCP_SV_DeadlockAvoidance_
         $db = $this->_getDb();
         XenForo_Db::beginTransaction($db);
 
-        // read the xf_user table early to get a lock
+        // read the xf_user table early to get a lock, but don't block other readers
         $db->query('
             SELECT user_id
             FROM xf_user
             WHERE user_id = ?
-            FOR UPDATE
+            LOCK IN SHARE MODE
         ', $contentUserId);
         // hoist bits out of the Like Transaction
         SV_DeadlockAvoidance_DataWriter::enterTransaction();

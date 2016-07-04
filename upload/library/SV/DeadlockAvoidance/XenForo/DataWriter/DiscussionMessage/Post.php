@@ -16,7 +16,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
             SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
         }
     }
-
+/*
     protected function _update()
     {
         if ($this->isChanged('message_state') &&
@@ -45,7 +45,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
 
         parent::_delete();
     }
-
+*/
     protected function _postSaveAfterTransaction()
     {
         if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
