@@ -13,7 +13,7 @@
     <listener event_id="load_class_model" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_Model_Report" description="XenForo_Model_Report"/>
     <listener event_id="load_class_model" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_Model_Like" description="XenForo_Model_Like"/>
     <listener event_id="load_class_model" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_Model_User" description="XenForo_Model_User"/>
-    <listener event_id="load_class_model" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_Forum" description="XenForo_DataWriter_Forum"/>
+    <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_Forum" description="XenForo_DataWriter_Forum"/>
     <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_ConversationMaster" description="XenForo_DataWriter_ConversationMaster"/>
     <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_ConversationMessage" description="XenForo_DataWriter_ConversationMessage"/>
     <listener event_id="load_class_datawriter" execute_order="2147483648" callback_class="SV_DeadlockAvoidance_Listener" callback_method="load_class" active="1" hint="XenForo_DataWriter_Discussion_Thread" description="XenForo_DataWriter_Discussion_Thread"/>
@@ -32,7 +32,11 @@
   <email_templates/>
   <email_template_modifications/>
   <optiongroups/>
-  <permissions/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
   <phrases/>
   <route_prefixes/>
   <style_properties/>
