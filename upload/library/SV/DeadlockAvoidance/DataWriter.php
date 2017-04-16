@@ -4,6 +4,7 @@ class SV_DeadlockAvoidance_DataWriter
 {
     protected static $transactionCount = 0;
     protected static $postSaveAfterTransactionList = array();
+    protected static $postSaveAfterTransactionListAlways = array();
 
 
     public static function enterTransaction()
@@ -11,16 +12,23 @@ class SV_DeadlockAvoidance_DataWriter
         self::$transactionCount += 1;
     }
 
-    public static function registerPostTransactionClosure($closure)
+    public static function registerPostTransactionClosure($closure, $alwaysExecute = false)
     {
         if (self::$transactionCount > 0)
         {
-            self::$postSaveAfterTransactionList[] = $closure;
+            if ($alwaysExecute)
+            {
+                self::$postSaveAfterTransactionListAlways[] = $closure;
+            }
+            else
+            {
+                self::$postSaveAfterTransactionList[] = $closure;
+            }
             return true;
         }
         return false;
     }
-    
+
     public static function exitTransaction($executePostTransaction)
     {
         self::$transactionCount -= 1;
@@ -29,6 +37,12 @@ class SV_DeadlockAvoidance_DataWriter
             self::$transactionCount = 0;
             $postSaveAfterTransactionList = self::$postSaveAfterTransactionList;
             self::$postSaveAfterTransactionList = array();
+            $postSaveAfterTransactionListAlways = self::$postSaveAfterTransactionListAlways;
+            self::$postSaveAfterTransactionListAlways = array();
+            foreach($postSaveAfterTransactionListAlways as $postSaveAfterTransaction)
+            {
+                $postSaveAfterTransaction();
+            }
             if ($executePostTransaction)
             {
                 foreach($postSaveAfterTransactionList as $postSaveAfterTransaction)
