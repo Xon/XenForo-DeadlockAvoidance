@@ -15,7 +15,7 @@ class SV_DeadlockAvoidance_DataWriter
     {
         if (self::$transactionCount > 0)
         {
-            self::$postSaveAfterTransactionList[] = $closure;        
+            self::$postSaveAfterTransactionList[] = $closure;
             return true;
         }
         return false;
@@ -27,7 +27,7 @@ class SV_DeadlockAvoidance_DataWriter
         if (self::$transactionCount <= 0)
         {
             self::$transactionCount = 0;
-            $postSaveAfterTransactionList = array_reverse(self::$postSaveAfterTransactionList);
+            $postSaveAfterTransactionList = self::$postSaveAfterTransactionList;
             self::$postSaveAfterTransactionList = array();
             if ($executePostTransaction)
             {

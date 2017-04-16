@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="SV_DeadlockAvoidance" title="Deadlock Avoidance Hack" version_string="1.0.15" version_id="1001500" url="https://xenforo.com/community/resources/deadlock-avoidance-by-xon.4973/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+<addon addon_id="SV_DeadlockAvoidance" title="Deadlock Avoidance Hack" version_string="1.0.16" version_id="1001600" url="https://xenforo.com/community/resources/deadlock-avoidance-by-xon.4973/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
