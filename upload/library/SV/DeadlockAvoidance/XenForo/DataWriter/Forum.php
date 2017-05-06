@@ -121,7 +121,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
             $db->query('
                 update xf_forum
                 set '.$sql.'
-                where node_id = ? and (last_post_date < ? || last_post_id = ? && last_thread_title != ?)
+                where node_id = ? and ((last_post_date < ?) or (last_post_id = ? && last_thread_title != ?))
             ', $params);
         }
     }
