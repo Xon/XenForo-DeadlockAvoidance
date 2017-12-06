@@ -9,6 +9,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
         try
         {
             $ret = parent::save();
+
             return $ret;
         }
         finally
@@ -16,42 +17,44 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
             SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
         }
     }
-/*
-    protected function _update()
-    {
-        if ($this->isChanged('message_state') &&
-            ($this->get('message_state') == 'visible' || $this->getExisting('message_state') == 'visible'))
+
+    /*
+        protected function _update()
         {
-            $this->_db->query('SELECT post_id
-                FROM xf_post
-                WHERE thread_id = ? and position >= ?
-                FOR UPDATE
-            ', array($this->get('thread_id'), $this->getExisting('position')));
+            if ($this->isChanged('message_state') &&
+                ($this->get('message_state') == 'visible' || $this->getExisting('message_state') == 'visible'))
+            {
+                $this->_db->query('SELECT post_id
+                    FROM xf_post
+                    WHERE thread_id = ? and position >= ?
+                    FOR UPDATE
+                ', array($this->get('thread_id'), $this->getExisting('position')));
+            }
+
+            parent::_update();
         }
 
-        parent::_update();
-    }
-
-    protected function _delete()
-    {
-        if ($this->get('message_state') == 'visible' || $this->getExisting('message_state') == 'visible')
+        protected function _delete()
         {
-            $this->_db->query('SELECT post_id
-                FROM xf_post
-                WHERE thread_id = ? and position >= ?
-                FOR UPDATE
-            ', array($this->get('thread_id'), $this->getExisting('position')));
-        }
+            if ($this->get('message_state') == 'visible' || $this->getExisting('message_state') == 'visible')
+            {
+                $this->_db->query('SELECT post_id
+                    FROM xf_post
+                    WHERE thread_id = ? and position >= ?
+                    FOR UPDATE
+                ', array($this->get('thread_id'), $this->getExisting('position')));
+            }
 
-        parent::_delete();
-    }
-*/
+            parent::_delete();
+        }
+    */
     protected function _postSaveAfterTransaction()
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
-        {
-            parent::_postSaveAfterTransaction();
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () {
+                parent::_postSaveAfterTransaction();
+            }
+        ))
         {
             return;
         }
@@ -61,10 +64,11 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_Post extends XFC
 
     public function _indexForSearch()
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
-        {
-            parent::_indexForSearch();
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () {
+                parent::_indexForSearch();
+            }
+        ))
         {
             return;
         }

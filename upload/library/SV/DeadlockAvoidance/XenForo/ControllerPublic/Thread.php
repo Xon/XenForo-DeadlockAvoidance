@@ -9,6 +9,7 @@ class SV_DeadlockAvoidance_XenForo_ControllerPublic_Thread extends XFCP_SV_Deadl
         try
         {
             $ret = parent::actionReplyBans();
+
             return $ret;
         }
         finally

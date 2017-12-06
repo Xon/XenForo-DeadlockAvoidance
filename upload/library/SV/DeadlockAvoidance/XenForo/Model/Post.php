@@ -2,7 +2,7 @@
 
 class SV_DeadlockAvoidance_XenForo_Model_Post extends XFCP_SV_DeadlockAvoidance_XenForo_Model_Post
 {
-    protected function _moveOrCopyPosts($action, array $posts, array $sourceThreads, array $targetThread, array $options = array())
+    protected function _moveOrCopyPosts($action, array $posts, array $sourceThreads, array $targetThread, array $options = [])
     {
         if ($action != 'move')
         {
@@ -20,10 +20,11 @@ class SV_DeadlockAvoidance_XenForo_Model_Post extends XFCP_SV_DeadlockAvoidance_
         {
             SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
         }
+
         return $ret;
     }
 
-    public function mergePosts(array $posts, array $threads, $targetPostId, $newMessage, $options = array())
+    public function mergePosts(array $posts, array $threads, $targetPostId, $newMessage, $options = [])
     {
         // hoist bits out of the mergePosts Transaction
         SV_DeadlockAvoidance_DataWriter::enterTransaction();
@@ -36,6 +37,7 @@ class SV_DeadlockAvoidance_XenForo_Model_Post extends XFCP_SV_DeadlockAvoidance_
         {
             SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
         }
+
         return $ret;
     }
 }

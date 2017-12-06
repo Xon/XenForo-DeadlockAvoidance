@@ -2,8 +2,8 @@
 
 class SV_DeadlockAvoidance_DataWriter
 {
-    protected static $transactionCount = 0;
-    protected static $postSaveAfterTransactionList = array();
+    protected static $transactionCount                   = 0;
+    protected static $postSaveAfterTransactionList       = array();
     protected static $postSaveAfterTransactionListAlways = array();
 
 
@@ -24,8 +24,10 @@ class SV_DeadlockAvoidance_DataWriter
             {
                 self::$postSaveAfterTransactionList[] = $closure;
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -39,13 +41,13 @@ class SV_DeadlockAvoidance_DataWriter
             self::$postSaveAfterTransactionList = array();
             $postSaveAfterTransactionListAlways = self::$postSaveAfterTransactionListAlways;
             self::$postSaveAfterTransactionListAlways = array();
-            foreach($postSaveAfterTransactionListAlways as $postSaveAfterTransaction)
+            foreach ($postSaveAfterTransactionListAlways as $postSaveAfterTransaction)
             {
                 $postSaveAfterTransaction();
             }
             if ($executePostTransaction)
             {
-                foreach($postSaveAfterTransactionList as $postSaveAfterTransaction)
+                foreach ($postSaveAfterTransactionList as $postSaveAfterTransaction)
                 {
                     $postSaveAfterTransaction();
                 }
@@ -53,5 +55,5 @@ class SV_DeadlockAvoidance_DataWriter
         }
     }
 
-    private function __construct() {}
+    private function __construct() { }
 }

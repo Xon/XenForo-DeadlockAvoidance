@@ -11,7 +11,8 @@ class SV_DeadlockAvoidance_XenForo_Model_Like extends XFCP_SV_DeadlockAvoidance_
         {
             $ret = parent::likeContent($contentType, $contentId, $contentUserId, $likeUserId, $likeDate);
         }
-        catch(Zend_Db_Statement_Mysqli_Exception $e)
+            /** @noinspection PhpRedundantCatchClauseInspection */
+        catch (Zend_Db_Statement_Mysqli_Exception $e)
         {
             SV_DeadlockAvoidance_DataWriter::exitTransaction(false);
             @XenForo_Db::rollbackAll();
@@ -30,6 +31,7 @@ class SV_DeadlockAvoidance_XenForo_Model_Like extends XFCP_SV_DeadlockAvoidance_
         {
             SV_DeadlockAvoidance_DataWriter::exitTransaction($ret);
         }
+
         return $ret;
     }
 }

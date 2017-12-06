@@ -5,13 +5,15 @@ class SV_DeadlockAvoidance_XenForo_Model_User extends XFCP_SV_DeadlockAvoidance_
     protected function getLock($name, $timeout)
     {
         $db = $this->_getDb();
-        return $db->fetchOne("select get_lock(?, ?)", array($name, $timeout));
+
+        return $db->fetchOne("select get_lock(?, ?)", [$name, $timeout]);
     }
 
     protected function releaseLock($name)
     {
         $db = $this->_getDb();
-        return $db->fetchOne("select release_lock(?)", array($name));
+
+        return $db->fetchOne("select release_lock(?)", [$name]);
     }
 
     public function follow(array $followUsers, $dupeCheck = true, array $user = null)
@@ -20,7 +22,7 @@ class SV_DeadlockAvoidance_XenForo_Model_User extends XFCP_SV_DeadlockAvoidance_
         {
             $user = XenForo_Visitor::getInstance()->toArray();
         }
-        $key = 'follow-'.$user['user_id'];
+        $key = 'follow-' . $user['user_id'];
         if (!$this->getLock($key, 1))
         {
             return false;

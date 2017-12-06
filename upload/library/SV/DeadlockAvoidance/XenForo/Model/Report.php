@@ -4,10 +4,11 @@ class SV_DeadlockAvoidance_XenForo_Model_Report extends XFCP_SV_DeadlockAvoidanc
 {
     public function sendAlertsOnReportResolution(array $report, $comment = '')
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function () use ($report, $comment)
-        {
-            parent::sendAlertsOnReportResolution($report, $comment);
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () use ($report, $comment) {
+                parent::sendAlertsOnReportResolution($report, $comment);
+            }
+        ))
         {
             return;
         }
@@ -16,10 +17,11 @@ class SV_DeadlockAvoidance_XenForo_Model_Report extends XFCP_SV_DeadlockAvoidanc
 
     public function sendAlertsOnReportRejection(array $report, $comment = '')
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function () use ($report, $comment)
-        {
-            parent::sendAlertsOnReportRejection($report, $comment);
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () use ($report, $comment) {
+                parent::sendAlertsOnReportRejection($report, $comment);
+            }
+        ))
         {
             return;
         }

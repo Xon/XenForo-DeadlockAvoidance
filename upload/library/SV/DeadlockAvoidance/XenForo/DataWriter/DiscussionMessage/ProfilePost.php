@@ -9,6 +9,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_ProfilePost exte
         try
         {
             $ret = parent::save();
+
             return $ret;
         }
         finally
@@ -19,10 +20,11 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_ProfilePost exte
 
     protected function _postSaveAfterTransaction()
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
-        {
-            parent::_postSaveAfterTransaction();
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () {
+                parent::_postSaveAfterTransaction();
+            }
+        ))
         {
             return;
         }
@@ -32,10 +34,11 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_DiscussionMessage_ProfilePost exte
 
     public function _indexForSearch()
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
-        {
-            parent::_indexForSearch();
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () {
+                parent::_indexForSearch();
+            }
+        ))
         {
             return;
         }

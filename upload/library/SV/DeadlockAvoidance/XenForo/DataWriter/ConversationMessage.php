@@ -9,6 +9,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_ConversationMessage extends XFCP_S
         try
         {
             $ret = parent::save();
+
             return $ret;
         }
         finally
@@ -19,10 +20,11 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_ConversationMessage extends XFCP_S
 
     protected function _postSaveAfterTransaction()
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
-        {
-            parent::_postSaveAfterTransaction();
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () {
+                parent::_postSaveAfterTransaction();
+            }
+        ))
         {
             return;
         }

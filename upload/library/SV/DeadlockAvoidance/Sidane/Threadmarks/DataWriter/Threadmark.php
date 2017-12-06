@@ -9,6 +9,7 @@ class SV_DeadlockAvoidance_Sidane_Threadmarks_DataWriter_Threadmark extends XFCP
         try
         {
             $ret = parent::save();
+
             return $ret;
         }
         finally
@@ -19,10 +20,11 @@ class SV_DeadlockAvoidance_Sidane_Threadmarks_DataWriter_Threadmark extends XFCP
 
     protected function _postSaveAfterTransaction()
     {
-        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(function ()
-        {
-            parent::_postSaveAfterTransaction();
-        }))
+        if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
+            function () {
+                parent::_postSaveAfterTransaction();
+            }
+        ))
         {
             return;
         }

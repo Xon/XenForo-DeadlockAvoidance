@@ -5,18 +5,20 @@ class SV_DeadlockAvoidance_XenForo_Model_ThreadWatch extends XFCP_SV_DeadlockAvo
     protected function getLock($name, $timeout)
     {
         $db = $this->_getDb();
-        return $db->fetchOne("select get_lock(?, ?)", array($name, $timeout));
+
+        return $db->fetchOne("select get_lock(?, ?)", [$name, $timeout]);
     }
 
     protected function releaseLock($name)
     {
         $db = $this->_getDb();
-        return $db->fetchOne("select release_lock(?)", array($name));
+
+        return $db->fetchOne("select release_lock(?)", [$name]);
     }
 
     public function setThreadWatchState($userId, $threadId, $state)
     {
-        $key = 'watch-'.$userId.'-'.$threadId;
+        $key = 'watch-' . $userId . '-' . $threadId;
         if (!$this->getLock($key, 1))
         {
             return false;
