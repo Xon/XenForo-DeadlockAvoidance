@@ -54,7 +54,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
             $components[] = 'discussion_count = discussion_count + ?';
 
             $params[] = $discussionDw->get('reply_count') + 1;
-            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?';
+            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?)';
         }
         else if ($discussionDw->getExisting('discussion_state') == 'visible' && $discussionDw->get('discussion_state') != 'visible')
         {
@@ -62,7 +62,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
             $components[] = 'discussion_count = discussion_count + ?';
 
             $params[] = -$discussionDw->get('reply_count') - 1;
-            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?';
+            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?)';
 
             if ($discussionDw->get('last_post_id') == $this->get('last_post_id'))
             {
@@ -73,7 +73,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
         {
             // no state change, probably just a reply
             $params[] = $discussionDw->get('reply_count') - $discussionDw->getExisting('reply_count');
-            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?';
+            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?)';
         }
 
         // atomically update the counters
