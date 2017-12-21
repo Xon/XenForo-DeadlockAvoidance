@@ -72,8 +72,17 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
         else if ($discussionDw->get('discussion_state') == 'visible' && $discussionDw->getExisting('discussion_state') == 'visible')
         {
             // no state change, probably just a reply
-            $params[] = $discussionDw->get('reply_count') - $discussionDw->getExisting('reply_count');
-            $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?)';
+            $replyCountChange = $discussionDw->get('reply_count') - $discussionDw->getExisting('reply_count');
+            if ($replyCountChange != 0)
+            {
+                $params[] = $replyCountChange;
+                $components[] = 'message_count = GREATEST(0, cast(message_count as signed) + ?)';
+
+                if ($replyCountChange < 0)
+                {
+                    $removePost = true;
+                }
+            }
         }
 
         // atomically update the counters
@@ -92,31 +101,56 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
 
         $params = array();
         $components = array();
-        $components[] = 'last_post_date = ?';
-        $components[] = 'last_post_id = ?';
-        $components[] = 'last_post_user_id = ?';
-        $components[] = 'last_post_username = ?';
-        $components[] = 'last_thread_title = ?';
         if ($removePost)
         {
-            $params[] = 0;
-            $params[] = 0;
-            $params[] = 0;
-            $params[] = '';
-            $params[] = '';
-        }
-        else
-        {
-            $params[] = $discussionDw->get('last_post_date');
-            $params[] = $discussionDw->get('last_post_id');
-            $params[] = $discussionDw->get('last_post_user_id');
-            $params[] = $discussionDw->get('last_post_username');
-            $params[] = $discussionDw->get('title');
-        }
+            $innerJoin = '
+                LEFT JOIN
+                        (SELECT node_id, last_post_id, last_post_date, last_post_user_id, last_post_username, title
+                FROM xf_thread
+                WHERE node_id = ? AND discussion_type <> \'redirect\' AND (discussion_state = \'visible\')
+                ORDER BY last_post_date DESC
+                LIMIT 1) thread ON xf_forum.node_id = thread.node_id
+            ';
+            $params[] = $this->get('node_id');
+            $components[] = 'xf_forum.last_post_date = thread.last_post_date';
+            $components[] = 'xf_forum.last_post_id = thread.last_post_id';
+            $components[] = 'xf_forum.last_post_user_id = thread.last_post_user_id';
+            $components[] = 'xf_forum.last_post_username = thread.last_post_username';
+            $components[] = 'xf_forum.last_thread_title = thread.title';
 
-        // update the last
-        if ($params && $components)
+            $sql = implode(', ', $components);
+            $params[] = $this->get('node_id');
+            $db->query(
+                "
+                update xf_forum
+                {$innerJoin}
+                set {$sql}
+                where xf_forum.node_id = ?
+            ", $params
+            );
+        }
+        else if ($discussionDw->isChanged('discussion_state') ||
+                 $discussionDw->isChanged('last_post_date') ||
+                 $discussionDw->isChanged('last_post_id') ||
+                 $discussionDw->isChanged('last_post_user_id') ||
+                 $discussionDw->isChanged('last_post_username') ||
+                 $discussionDw->isChanged('title'))
         {
+            $components[] = 'xf_forum.last_post_date = ?';
+            $params[] = $discussionDw->get('last_post_date');
+
+            $components[] = 'xf_forum.last_post_id = ?';
+            $params[] = $discussionDw->get('last_post_id');
+
+            $components[] = 'xf_forum.last_post_user_id = ?';
+            $params[] = $discussionDw->get('last_post_user_id');
+
+            $components[] = 'xf_forum.last_post_username = ?';
+            $params[] = $discussionDw->get('last_post_username');
+
+            $components[] = 'xf_forum.last_thread_title = ?';
+            $params[] = $discussionDw->get('title');
+
             $sql = implode(', ', $components);
             $params[] = $this->get('node_id');
             $params[] = $discussionDw->get('last_post_date');
@@ -127,7 +161,7 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
                 "
                 update xf_forum
                 set {$sql}
-                where node_id = ? and (last_post_date != ? or last_post_id != ? or last_post_username != ? or last_thread_title != ?)
+                where xf_forum.node_id = ? and (xf_forum.last_post_date < ? or (xf_forum.last_post_id = ? && (xf_forum.last_thread_title != ? or xf_forum.last_post_username != ?)))
             ", $params
             );
         }
@@ -135,6 +169,13 @@ class SV_DeadlockAvoidance_XenForo_DataWriter_Forum extends XFCP_SV_DeadlockAvoi
 
     public function updateCountersAfterDiscussionSave(XenForo_DataWriter_Discussion $discussionDw, $forceInsert = false)
     {
+        // probably a move
+        if ($forceInsert)
+        {
+            parent::updateCountersAfterDiscussionSave($discussionDw, $forceInsert);
+
+            return;
+        }
         if (SV_DeadlockAvoidance_DataWriter::registerPostTransactionClosure(
             function () use ($discussionDw, $forceInsert) {
                 $this->_updateCountersAfterDiscussionSave($discussionDw, $forceInsert);
