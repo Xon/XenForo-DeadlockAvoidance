@@ -2,34 +2,27 @@
 
 class SV_DeadlockAvoidance_XenForo_Model_ThreadWatch extends XFCP_SV_DeadlockAvoidance_XenForo_Model_ThreadWatch
 {
-    protected function getLock($name, $timeout)
-    {
-        $db = $this->_getDb();
-
-        return $db->fetchOne("select get_lock(?, ?)", [$name, $timeout]);
-    }
-
-    protected function releaseLock($name)
-    {
-        $db = $this->_getDb();
-
-        return $db->fetchOne("select release_lock(?)", [$name]);
-    }
-
     public function setThreadWatchState($userId, $threadId, $state)
     {
-        $key = 'watch-' . $userId . '-' . $threadId;
-        if (!$this->getLock($key, 1))
-        {
-            return false;
-        }
         try
         {
             return parent::setThreadWatchState($userId, $threadId, $state);
         }
-        finally
+        /** @noinspection PhpRedundantCatchClauseInspection */
+        catch (Zend_Db_Exception $e)
         {
-            $this->releaseLock($key);
+            @XenForo_Db::rollbackAll();
+            $code = $e->getCode();
+            if ($code == 1062 || $code == 1213 ||
+                stripos($e->getMessage(), "Deadlock found when trying to get lock; try restarting transaction") !== false ||
+                stripos($e->getMessage(), "Duplicate entry") !== false)
+            {
+                return false;
+            }
+            else
+            {
+                throw $e;
+            }
         }
     }
 }

@@ -2,38 +2,31 @@
 
 class SV_DeadlockAvoidance_XenForo_Model_User extends XFCP_SV_DeadlockAvoidance_XenForo_Model_User
 {
-    protected function getLock($name, $timeout)
-    {
-        $db = $this->_getDb();
-
-        return $db->fetchOne("select get_lock(?, ?)", [$name, $timeout]);
-    }
-
-    protected function releaseLock($name)
-    {
-        $db = $this->_getDb();
-
-        return $db->fetchOne("select release_lock(?)", [$name]);
-    }
-
     public function follow(array $followUsers, $dupeCheck = true, array $user = null)
     {
         if ($user === null)
         {
             $user = XenForo_Visitor::getInstance()->toArray();
         }
-        $key = 'follow-' . $user['user_id'];
-        if (!$this->getLock($key, 1))
-        {
-            return false;
-        }
         try
         {
             return parent::follow($followUsers, $dupeCheck, $user);
         }
-        finally
+        /** @noinspection PhpRedundantCatchClauseInspection */
+        catch (Zend_Db_Exception $e)
         {
-            $this->releaseLock($key);
+            @XenForo_Db::rollbackAll();
+            $code = $e->getCode();
+            if ($code == 1062 || $code == 1213 ||
+                stripos($e->getMessage(), "Deadlock found when trying to get lock; try restarting transaction") !== false ||
+                stripos($e->getMessage(), "Duplicate entry") !== false)
+            {
+                return false;
+            }
+            else
+            {
+                throw $e;
+            }
         }
     }
 }
